@@ -6,4 +6,4 @@ I’ve created a little command line tool which captures a screenshot every once
 
 I hope it might help out someone else (I know of tools like http://timesnapper.com, but they are paid and I don’t need that many functions).
 
-[IForgot console](/iforgot.png)
+![IForgot console](/iforgot.png)
