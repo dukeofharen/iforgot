@@ -1,0 +1,4 @@
+*.suo
+IForgot*/bin
+IForgot*/obj
+packages/
