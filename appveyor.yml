@@ -1,0 +1,11 @@
+configuration: Release
+
+before_build:
+  - nuget restore
+
+build:
+  verbosity: minimal
+
+artifacts:
+  - path: IForgot\bin\$(configuration)
+    name: iforgot
