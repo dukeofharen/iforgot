@@ -12,4 +12,5 @@ I hope it might help out someone else (I know of tools like http://timesnapper.c
 
 # Downloads
 
-* [0.0.1 (2015-12-13)](http://duc.gr/iforgot-001)
+* [Version 0.0.1 (2015-12-13)](http://duc.gr/iforgot-001)
+* [Version 0.0.2 (2016-03-02)](http://duc.gr/iforgot002)
