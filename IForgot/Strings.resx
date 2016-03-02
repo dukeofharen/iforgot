@@ -117,10 +117,41 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Buttons" xml:space="preserve">
+    <value>Space: manually take screenshot
+Del: reset the configuration</value>
+  </data>
   <data name="CreditsApp" xml:space="preserve">
     <value>IForgot - Made by Duco Winterwerp in 2015 - ducode.org</value>
   </data>
   <data name="CreditsIcon" xml:space="preserve">
     <value>Icon by RaphaelJS (raphaeljs.com)</value>
+  </data>
+  <data name="DeleteOldScreenshots" xml:space="preserve">
+    <value>Deleted {0} old screenshots.</value>
+  </data>
+  <data name="HowManyDays" xml:space="preserve">
+    <value>How many days should the screenshots be saved?</value>
+  </data>
+  <data name="NewScreenshotTaken" xml:space="preserve">
+    <value>New screenshot taken at {0}: {1}</value>
+  </data>
+  <data name="ProvideInterval" xml:space="preserve">
+    <value>Please provide the screenshot interval (in seconds):</value>
+  </data>
+  <data name="ProvidePath" xml:space="preserve">
+    <value>Please provide the path to where the screenshots should be stored:</value>
+  </data>
+  <data name="SettingsFileCorrupt" xml:space="preserve">
+    <value>The settings.json file is corrupt. Please delete it.</value>
+  </data>
+  <data name="SettingsFileName" xml:space="preserve">
+    <value>settings.json</value>
+  </data>
+  <data name="ShootScreenshotIn3Seconds" xml:space="preserve">
+    <value>A new screenshot will be shot in 3 seconds</value>
+  </data>
+  <data name="SomethingWentWrong" xml:space="preserve">
+    <value>Something went wrong: {0}</value>
   </data>
 </root>

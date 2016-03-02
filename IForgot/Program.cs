@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +10,7 @@ namespace IForgot
 	class Program
 	{
 		private static SettingsModel settings;
+		private static bool running;
 
 		static void Main(string[] args)
 		{
@@ -20,30 +18,63 @@ namespace IForgot
 			{
 				Console.WriteLine(Strings.CreditsApp);
 				Console.WriteLine(Strings.CreditsIcon);
+				Console.WriteLine(Strings.Buttons);
 				Console.WriteLine();
 				if (!Init())
 				{
-					throw new Exception("The settings.json file is corrupt. Please delete it.");
+					throw new Exception(Strings.SettingsFileCorrupt);
 				}
 				Shooter shooter = new Shooter();
+				Action shoot = () =>
+				{
+					string filePath = shooter.Shoot(settings.Path);
+					Console.WriteLine(Strings.NewScreenshotTaken, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), filePath);
+				};
+				Action start = () =>
+				{
+					Task.Run(() =>
+					{
+						running = true;
+						while (running)
+						{
+							try
+							{
+								shoot();
+								Thread.Sleep(10000);
+							}
+							catch (Exception e)
+							{
+								Console.WriteLine(Strings.SomethingWentWrong, e.Message);
+								Thread.Sleep(10000);
+							}
+						}
+					});
+				};
+				start();
 				while (true)
 				{
-					try
+					var key = Console.ReadKey();
+					if(key.Key == ConsoleKey.Spacebar)
 					{
-						Thread.Sleep(settings.IntervalInMinutes * 60 * 1000);
-						string filePath = shooter.Shoot(settings.Path);
-						Console.WriteLine("New screenshot taken at {0}: {1}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), filePath);
+						Console.WriteLine(Strings.ShootScreenshotIn3Seconds);
+						Thread.Sleep(3000);
+						shoot();
 					}
-					catch (Exception e)
+					else if(key.Key == ConsoleKey.Delete)
 					{
-						Console.WriteLine("Something went wrong: {0}", e.Message);
-						Thread.Sleep(10000);
+						running = false;
+						File.Delete(Strings.SettingsFileName);
+						if (!Init())
+						{
+							throw new Exception(Strings.SettingsFileCorrupt);
+						}
+						start();
 					}
 				}
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("Something went wrong: {0}", e.Message);
+				Console.WriteLine(Strings.SomethingWentWrong, e.Message);
 			}
 			finally
 			{
@@ -53,27 +84,27 @@ namespace IForgot
 
 		private static bool Init()
 		{
-			if (!File.Exists("settings.json"))
+			if (!File.Exists(Strings.SettingsFileName))
 			{
 				settings = new SettingsModel();
 				bool valid = false;
 				while (!valid)
 				{
-					Console.WriteLine("Please provide the screenshot interval (in minutes):");
+					Console.WriteLine(Strings.ProvideInterval);
 					Console.Write("> ");
 					string intervalString = Console.ReadLine();
 					int interval = 0;
 					if (int.TryParse(intervalString, out interval))
 					{
 						valid = true;
-						settings.IntervalInMinutes = interval;
+						settings.IntervalInSeconds = interval;
 					}
 				}
 				valid = false;
 
 				while (!valid)
 				{
-					Console.WriteLine("Please provide the path to where the screenshots should be stored:");
+					Console.WriteLine(Strings.ProvidePath);
 					Console.Write("> ");
 					string path = Console.ReadLine();
 					if (Directory.Exists(path))
@@ -86,7 +117,7 @@ namespace IForgot
 
 				while (!valid)
 				{
-					Console.WriteLine("How many days should the screenshots be saved?");
+					Console.WriteLine(Strings.HowManyDays);
 					Console.Write("> ");
 					string howManyDaysString = Console.ReadLine();
 					int howManyDays = 0;
@@ -97,11 +128,11 @@ namespace IForgot
 					}
 				}
 
-				File.WriteAllText("settings.json", JsonConvert.SerializeObject(settings));
+				File.WriteAllText(Strings.SettingsFileName, JsonConvert.SerializeObject(settings));
 				return true;
 			}
 
-			settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText("settings.json"));
+			settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Strings.SettingsFileName));
 			if (settings == null)
 			{
 				return false;
@@ -119,7 +150,7 @@ namespace IForgot
 			foreach (string file in files)
 			{
 				string[] parts = file.Split(new char[] { Path.DirectorySeparatorChar });
-				string rawDate = parts[parts.Length - 1].Replace("screen", string.Empty).Replace(".png", string.Empty);
+				string rawDate = parts[parts.Length - 1].Replace("screen", string.Empty).Replace(".jpg", string.Empty);
 				DateTime screenShotTime = DateTime.MinValue;
 				DateTime.TryParseExact(rawDate, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out screenShotTime);
 				if (screenShotTime != DateTime.MinValue && DateTime.Now.AddDays(-settings.HowManyDays) > screenShotTime)
@@ -130,7 +161,7 @@ namespace IForgot
 			}
 			if (deleteCount > 0)
 			{
-				Console.WriteLine("Deleted {0} old screenshots.", deleteCount);
+				Console.WriteLine(Strings.DeleteOldScreenshots, deleteCount);
 			}
 		}
 	}
