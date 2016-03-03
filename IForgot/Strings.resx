@@ -142,6 +142,9 @@ Del: reset the configuration</value>
   <data name="ProvidePath" xml:space="preserve">
     <value>Please provide the path to where the screenshots should be stored:</value>
   </data>
+  <data name="SettingsFileAt" xml:space="preserve">
+    <value>Settings file located at: {0}</value>
+  </data>
   <data name="SettingsFileCorrupt" xml:space="preserve">
     <value>The settings.json file is corrupt. Please delete it.</value>
   </data>

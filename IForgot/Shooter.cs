@@ -38,7 +38,7 @@ namespace IForgot
 
 			// Create an Encoder object based on the GUID 
 			// for the Quality parameter category.
-			System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
+			Encoder myEncoder = Encoder.Quality;
 
 			// Create an EncoderParameters object. 
 			// An EncoderParameters object has an array of EncoderParameter 

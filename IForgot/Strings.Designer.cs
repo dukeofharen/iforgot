@@ -134,6 +134,15 @@ namespace IForgot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Settings file located at: {0}.
+        /// </summary>
+        internal static string SettingsFileAt {
+            get {
+                return ResourceManager.GetString("SettingsFileAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The settings.json file is corrupt. Please delete it..
         /// </summary>
         internal static string SettingsFileCorrupt {

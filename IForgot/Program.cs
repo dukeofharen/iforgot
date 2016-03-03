@@ -2,6 +2,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace IForgot
 	{
 		private static SettingsModel settings;
 		private static bool running;
+		private static string settingsPath;
 
 		static void Main(string[] args)
 		{
@@ -19,11 +21,12 @@ namespace IForgot
 				Console.WriteLine(Strings.CreditsApp);
 				Console.WriteLine(Strings.CreditsIcon);
 				Console.WriteLine(Strings.Buttons);
-				Console.WriteLine();
 				if (!Init())
 				{
 					throw new Exception(Strings.SettingsFileCorrupt);
 				}
+				settingsPath = Path.Combine(Path.GetDirectoryName((new Uri(Assembly.GetExecutingAssembly().CodeBase)).AbsolutePath), Strings.SettingsFileName);
+				Console.WriteLine(string.Format(Strings.SettingsFileAt, settingsPath));
 				Shooter shooter = new Shooter();
 				Action shoot = () =>
 				{
@@ -40,7 +43,7 @@ namespace IForgot
 							try
 							{
 								shoot();
-								Thread.Sleep(10000);
+								Thread.Sleep(settings.IntervalInSeconds * 1000);
 							}
 							catch (Exception e)
 							{
