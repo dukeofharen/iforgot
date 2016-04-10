@@ -2,9 +2,10 @@
 
 ![AppVeyor Build](https://ci.appveyor.com/api/projects/status/fyko5s30q05d233q)
 
-* [Version 0.0.2.1 (2016-03-03)](http://duc.gr/iforgot0021)
-* [Version 0.0.2 (2016-03-02)](http://duc.gr/iforgot002)
-* [Version 0.0.1 (2015-12-13)](http://duc.gr/iforgot-001)
+* Version 0.2.12 ([download](http://duc.gr/if-0.2.12))
+* Version 0.0.2.1 ([download](http://duc.gr/iforgot0021))
+* Version 0.0.2 ([download](http://duc.gr/iforgot002))
+* Version 0.0.1 ([download](http://duc.gr/iforgot-001))
 
 If you have a job and have to sit behind the PC a lot, you probably know the problem of not remembering what you’ve done earlier today (or even earlier this week). I also have the exact problem; for example, sometimes when I have to fill in the monthly hour form. Also handy for those daily standups.
 
