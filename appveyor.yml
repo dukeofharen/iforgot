@@ -24,7 +24,9 @@ after_build:
 artifacts:
   - path: IForgot\bin\$(configuration)
     name: iforgot
+    
   - path: **\*.nupkg
+    name: iforgot-nupkg
 
 deploy:
   release: v$(app_version)
