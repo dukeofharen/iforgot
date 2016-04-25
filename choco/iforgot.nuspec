@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>iforgot</id>
+    <title>IForgot</title>
+    <version>[VERSION]</version>
+    <authors>Duco Winterwerp</authors>
+    <owners>Duco Winterwerp</owners>
+    <summary>Lightweight daily screen capture tool</summary>
+    <description>I've created a little command line tool which captures a screenshot every once in a while (you can set the interval in minutes) and saves it to a specific location on your PC. I save them to my Dropbox. I also copied a link to the tool in my startup folder, so everytime my work laptop starts, the program opens. Now, when I need to go back in time; no problem! I've got a folder filled with screenshots. 
+    </description>
+    <projectUrl>https://github.com/dukeofharen/iforgot</projectUrl>
+    <tags>iforgot screenshot .net</tags>
+    <copyright>Duco Winterwerp</copyright>
+    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
