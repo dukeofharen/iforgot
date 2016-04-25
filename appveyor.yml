@@ -25,7 +25,7 @@ artifacts:
   - path: IForgot\bin\$(configuration)
     name: iforgot
     
-  - path: **\*.nupkg
+  - path: IForgot\choco\*.nupkg
     name: iforgot-nupkg
 
 deploy:
