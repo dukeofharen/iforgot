@@ -157,4 +157,7 @@ Del: reset the configuration</value>
   <data name="SomethingWentWrong" xml:space="preserve">
     <value>Something went wrong: {0}</value>
   </data>
+  <data name="VersionApp" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
 </root>

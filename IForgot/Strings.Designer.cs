@@ -177,5 +177,14 @@ namespace IForgot {
                 return ResourceManager.GetString("SomethingWentWrong", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version {0}.
+        /// </summary>
+        internal static string VersionApp {
+            get {
+                return ResourceManager.GetString("VersionApp", resourceCulture);
+            }
+        }
     }
 }

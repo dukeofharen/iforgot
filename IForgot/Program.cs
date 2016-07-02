@@ -19,6 +19,7 @@ namespace IForgot
 			try
 			{
 				Console.WriteLine(Strings.CreditsApp);
+                Console.WriteLine(Strings.VersionApp, Assembly.GetExecutingAssembly().GetName().Version);
 				Console.WriteLine(Strings.CreditsIcon);
 				Console.WriteLine(Strings.Buttons);
 				if (!Init())
