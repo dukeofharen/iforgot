@@ -10,7 +10,7 @@
     <description>I've created a little command line tool which captures a screenshot every once in a while (you can set the interval in minutes) and saves it to a specific location on your PC. I save them to my Dropbox. I also copied a link to the tool in my startup folder, so everytime my work laptop starts, the program opens. Now, when I need to go back in time; no problem! I've got a folder filled with screenshots. 
     </description>
     <projectUrl>https://github.com/dukeofharen/iforgot</projectUrl>
-    <tags>iforgot screenshot .net</tags>
+    <tags>iforgot screenshot</tags>
     <copyright>Duco Winterwerp</copyright>
     <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
