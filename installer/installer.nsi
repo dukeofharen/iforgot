@@ -43,7 +43,7 @@ functionEnd
  
 section "install"
 	setOutPath $INSTDIR
-	file /r "${BINDIRECTORY}"
+	file /r "${BINDIRECTORY}\*"
  	writeUninstaller "$INSTDIR\uninstall.exe"
  
 	createDirectory "$SMPROGRAMS\${COMPANYNAME}"
