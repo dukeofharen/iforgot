@@ -1,21 +1,24 @@
+. "scripts\UpdateAssemblyInfo.ps1"
+Add-Type -assembly "system.io.compression.filesystem"
+
 # Set variables
 $env:PATH = "${env:PATH}:;C:\Program Files (x86)\MSBuild\14.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files (x86)\NSIS\Bin"
 $releaseBinDir = Join-Path -Path $PSScriptRoot "IForgot\bin\Release"
-$buildOutputDir = Join-Path -Path $PSScriptRoot "BuildOutput"
-$buildOutputBinDir = Join-Path -Path $buildOutputDir "bin"
+$solutionDir = Join-Path -Path $PSScriptRoot "IForgot"
 $nsiDir = Join-Path -Path $PSScriptRoot "installer"
 $nsiPath = Join-Path -Path $nsiDir "installer.nsi"
 $nsiExePath = Join-Path -Path $nsiDir "installer.exe"
+$nugetLocation = Join-Path -Path $PSScriptRoot "nuget.exe"
+$metaPath = Join-Path -Path $PSScriptRoot "meta.xml"
+[xml]$meta = Get-Content $metaPath
+$version = [version]$meta.Settings.Version
+$buildOutputDir = Join-Path -Path $PSScriptRoot "BuildOutput"
+$buildOutputSubDir = Join-Path -Path $buildOutputDir "IForgot_$version"
+$buildOutputBinDir = Join-Path -Path $buildOutputSubDir "bin"
+$buildOutputZipPath = Join-Path -Path $buildOutputSubDir "app.zip"
 
 # Remove bin and obj folders
 Get-ChildItem .\ -include bin,obj -Recurse | foreach ($_) { remove-item $_.fullname -Force -Recurse }
-
-# Remove BuildOutputDir
-if(Test-Path $buildOutputDir)
-{
-    Write-Host "Deleting $buildOutputDir"
-    Remove-Item $buildOutputDir -Force -Recurse
-}
 
 # Create folders
 if(!(Test-Path $buildOutputDir))
@@ -23,12 +26,27 @@ if(!(Test-Path $buildOutputDir))
     Write-Host "Creating $buildOutputDir"
     New-Item -ItemType directory -Path $buildOutputDir
 }
+if(!(Test-Path $buildOutputSubDir))
+{
+    Write-Host "Creating $buildOutputSubDir"
+    New-Item -ItemType directory -Path $buildOutputSubDir
+}
 if(!(Test-Path $buildOutputBinDir))
 {
     Write-Host "Creating $buildOutputBinDir"
     New-Item -ItemType directory -Path $buildOutputBinDir
 }
-# TODO Patch version
+
+# Patch version
+$buildNumber = (Get-Date).ToString("yyMMdd")
+$versionString = "{0}.{1}.{2}.{3}" -f $version.Major, $version.Minor, $version.Build, ($version.Revision + 1)
+$meta.Settings.Version = $versionString
+$meta.Save($metaPath)
+Write-Host "Updating version numbers to $versionString"
+Update-AllAssemblyInfoFiles $solutionDir $versionString
+
+# NuGet restore
+& $nugetLocation restore
 
 # Build solution
 & msbuild IForgot.sln /p:Configuration=Release
@@ -42,12 +60,21 @@ Get-Childitem $releaseBinDir -Recurse -Filter "*.dll" | Copy-Item -Destination $
 Write-Host "Renaming .exe file"
 Rename-Item (Join-Path -Path $buildOutputBinDir "IForgot.exe") "iforgot.exe"
 
-# TODO Zip built files
-
 # Build installer
+$env:VersionMajor = $version.Major
+$env:VersionMinor = $version.Minor
+$env:VersionBuild = $version.Build
+$env:BuildOutputDirectory = $buildOutputBinDir
+
 Write-Host "Building installer $nsiPath"
 & makensis $nsiPath
 
 # Moving installer file
-Write-Host "Moving installer file to $buildOutputDir"
-Move-Item $nsiExePath $buildOutputDir
+Write-Host "Moving installer file to $buildOutputSubDir"
+Move-Item $nsiExePath $buildOutputSubDir
+
+# Zip built files
+Write-Host "Zipping $buildOutputBinDir to $buildOutputZipPath"
+[io.compression.zipfile]::CreateFromDirectory($buildOutputBinDir, $buildOutputZipPath)
+Write-Host "Deleting $buildOutputBinDir"
+Remove-Item $buildOutputBinDir -Force -Recurse
