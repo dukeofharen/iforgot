@@ -13,9 +13,6 @@ $metaPath = Join-Path -Path $PSScriptRoot "meta.xml"
 [xml]$meta = Get-Content $metaPath
 $version = [version]$meta.Settings.Version
 $buildOutputDir = Join-Path -Path $PSScriptRoot "BuildOutput"
-$buildOutputSubDir = Join-Path -Path $buildOutputDir "IForgot_$version"
-$buildOutputBinDir = Join-Path -Path $buildOutputSubDir "bin"
-$buildOutputZipPath = Join-Path -Path $buildOutputSubDir "app.zip"
 
 # Remove bin and obj folders
 Get-ChildItem .\ -include bin,obj -Recurse | foreach ($_) { remove-item $_.fullname -Force -Recurse }
@@ -26,6 +23,19 @@ if(!(Test-Path $buildOutputDir))
     Write-Host "Creating $buildOutputDir"
     New-Item -ItemType directory -Path $buildOutputDir
 }
+
+# Patch version
+$buildNumber = (Get-Date).ToString("yyMMdd")
+$versionString = "{0}.{1}.{2}.{3}" -f $version.Major, $version.Minor, $version.Build, ($version.Revision + 1)
+$meta.Settings.Version = $versionString
+$meta.Save($metaPath)
+Write-Host "Updating version numbers to $versionString"
+Update-AllAssemblyInfoFiles $solutionDir $versionString
+
+# Create sub folders
+$buildOutputSubDir = Join-Path -Path $buildOutputDir "IForgot_$versionString"
+$buildOutputBinDir = Join-Path -Path $buildOutputSubDir "bin"
+$buildOutputZipPath = Join-Path -Path $buildOutputSubDir "app.zip"
 if(!(Test-Path $buildOutputSubDir))
 {
     Write-Host "Creating $buildOutputSubDir"
@@ -36,14 +46,6 @@ if(!(Test-Path $buildOutputBinDir))
     Write-Host "Creating $buildOutputBinDir"
     New-Item -ItemType directory -Path $buildOutputBinDir
 }
-
-# Patch version
-$buildNumber = (Get-Date).ToString("yyMMdd")
-$versionString = "{0}.{1}.{2}.{3}" -f $version.Major, $version.Minor, $version.Build, ($version.Revision + 1)
-$meta.Settings.Version = $versionString
-$meta.Save($metaPath)
-Write-Host "Updating version numbers to $versionString"
-Update-AllAssemblyInfoFiles $solutionDir $versionString
 
 # NuGet restore
 & $nugetLocation restore
